@@ -1,0 +1,7 @@
+<?php
+
+/**
+ * @file cql_strict_parser.module
+ *
+ * This module is just a wrapper for the class CQLStrictParser
+ */
