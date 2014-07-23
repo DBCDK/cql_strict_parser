@@ -21,40 +21,46 @@ class CQLStrictParser {
     '@ OG @' => ' and ',
     '@ AND @' => ' and ',
   );
+  /** Regular expression for extracting sub-expressions
+   * @var string
+   */
+  private $sub_regex = '/(\((?>[^()]+|(?1))*\))/';
 
   /** Takes a loose formatted cql string and parses to strict cql
    * @param $expression
    * @return string
    */
   public function parse($expression) {
-
     $expression = $this->parseSubExpression($expression);
     $expression = $this->replaceOperators($expression);
-
     return $expression;
   }
 
-  /** Extracts subexpressions (expressions encapsulated by () ) and converts to
+  /** Extracts sub-expressions (expressions encapsulated by () ) and converts to
    * strict cql
    * @param $expression
    * @return string
    */
   private function parseSubExpression($expression) {
-
-    // match all subexpressions recursively
-    $sub_regex = '/(\((?>[^()]+|(?1))*\))/';
-    preg_match_all($sub_regex, $expression, $match);
+    preg_match_all($this->sub_regex, $expression, $match);
 
     if (!empty($match[1])) {
       foreach ($match[1] as $needle) {
-        $nuddle = $this->trimString($needle);
-        $replacement = $this->parseSubExpression($nuddle);
+        $trimmed_needle = $this->trimString($needle);
+        $replacement = $this->parseSubExpression($trimmed_needle);
         $expression = str_replace($needle, '(' . $replacement .')', $expression);
       }
     }
 
-    // Parse the rest
-    $sub = preg_replace($sub_regex, '[SUB]', $expression);
+    return $this->parseExpressionsInSubExpressions($expression);
+  }
+
+  /** Convert expressions in sub-expressions to strict cql
+   * @param $expression
+   * @return string
+   */
+  private function parseExpressionsInSubExpressions($expression) {
+    $sub = preg_replace($this->sub_regex, '[SUB]', $expression);
     $expressions = explode('[SUB]', $sub);
     usort($expressions, 'self::sortStringsByLength');
     foreach ($expressions as $needle) {
@@ -63,8 +69,8 @@ class CQLStrictParser {
     }
 
     return $expression;
-  }
 
+  }
 
   /** Replace loose operators with strict operators
    * @param $expression
