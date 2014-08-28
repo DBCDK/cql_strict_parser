@@ -22,7 +22,6 @@ class CQLParserUnitTestCase extends DrupalUnitTestCase {
   }
 
   public function testParsingMethods() {
-
     $tests = array(
       "term.genre=politik og politikere" => "term.genre=\"politik og politikere\"",
       "dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*" => "dkcclterm.df=\"metafysik\" or dkcclterm.ti=\"metafysi*\"",
@@ -35,8 +34,9 @@ class CQLParserUnitTestCase extends DrupalUnitTestCase {
       "dkcclterm.em=kvinder OG dkcclterm.em=(forskning* ELLER videnskab*) IKKE dkcclterm.dk=sk" => "dkcclterm.em=\"kvinder\" and dkcclterm.em=(\"forskning*\" or \"videnskab*\") not dkcclterm.dk=\"sk\"",
       "(dkcclterm.df=(eksem ELLER huden ELLER hudsygdomme) OG dkcclterm.dk=(61.44)) ELLER (dkcclterm.ok=61.69 OG arbejdsmiljø)" => "(dkcclterm.df=(\"eksem\" or \"huden\" or \"hudsygdomme\") and dkcclterm.dk=(\"61.44\")) or (dkcclterm.ok=\"61.69\" and \"arbejdsmiljø\")",
       "(dkcclterm.df=mani) ELLER dkcclterm.df=maniodepressive ELLER dkcclterm.ti=bipolar affektiv" => "(dkcclterm.df=\"mani\") or dkcclterm.df=\"maniodepressive\" or dkcclterm.ti=\"bipolar affektiv\"",
+      "dkcclterm.df=(indlæring ELLER læring ELLER læreprocesser) OG dkcclterm.df=(undervisning ELLER didaktik) OG dkcclterm.ok=(37.01 ELLER 37.1*)" => 'dkcclterm.df=("indlæring" or "læring" or "læreprocesser") and dkcclterm.df=("undervisning" or "didaktik") and dkcclterm.ok=("37.01" or "37.1*")',
+      "indlæring ELLER læring ELLER læreprocesser" => '"indlæring" or "læring" or "læreprocesser"',
     );
-
 
     $parser = new CQLStrictParser();
 

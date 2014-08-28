@@ -88,16 +88,19 @@ class CQLStrictParser {
 
     // Extract searchCode/value expressions
     $expressions = $this->getSearchCodes($expression);
+    $tokens = array();
 
     // Loop through expressions replace with strict cql
     foreach ($expressions as $needle) {
       $replacement = $this->parseSearchCode($needle);
       if(!empty($replacement)){
-        $expression = str_replace($needle, $replacement, $expression);
+        $token = '[token ' . count($tokens) .']';
+        $tokens[$token] = $replacement;
+        $expression = str_replace($needle, $token, $expression);
       }
     }
 
-    return $expression;
+    return str_replace(array_keys($tokens), array_values($tokens), $expression);
   }
 
   /** Explodes expressions by operators and returns them sorted by lenght
@@ -117,6 +120,8 @@ class CQLStrictParser {
    * @return string
    */
   private function parseSearchCode($expression) {
+    if (empty($expression))
+      return $expression;
     $expression = trim($expression);
     if (strpos($expression, '=') !== false) {
       list($searchcode, $searchvalue) = explode('=', $expression);
