@@ -125,12 +125,12 @@ class CQLStrictParser {
     $expression = trim($expression);
     if (strpos($expression, '=') !== false) {
       list($searchcode, $searchvalue) = explode('=', $expression);
-      if (!empty($searchvalue)) {
+      if (!empty($searchvalue) && strpos($searchvalue, ' ') !== FALSE) {
         $searchvalue = "\"$searchvalue\"";
       }
       $expression = $searchcode . "=" . $searchvalue;
     }
-    else {
+    else if (strpos($expression, ' ') !== FALSE){
       $expression = "\"$expression\"";
     }
     return $expression;
