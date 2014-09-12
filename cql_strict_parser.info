@@ -2,7 +2,7 @@ name = CQL strict parser
 description = php class for parsing unstrict CQL to strict CQL
 package = CQL Utilities
 core = 7.x
-version = 7.x-0.3
+version = 7.x-0.4
 
 files[] = test/cql_strict_parser_unit_test.test
 files[] = lib/cql_strict_parser.inc
